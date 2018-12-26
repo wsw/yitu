@@ -96,9 +96,9 @@ export default {
   .container i {
     position: absolute;
     z-index: 4;
-    width: 2px;
-    height: 2px;
-    border-radius: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
     background: blue;
   }
 </style>
