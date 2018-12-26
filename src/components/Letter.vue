@@ -3,41 +3,61 @@
 </template>
 
 <script>
-import Bus from '../common/Bus';
+import Bus from '../common/Bus'
+
 export default {
-	name: 'letter',
-	mounted () {
-		let ctx = this.$refs.canvas.getContext("2d");
-		ctx.textAlign="center";
-		ctx.font="100px Georgia";
-		ctx.fillStyle="#00ffff";
-		ctx.fillText('G', 50, 80);
-		let pix = ctx.getImageData(0, 0, 100, 100).data;
-		// console.log(dotNodes.data.filter(v => v > 0))
-		let dotNodes = [];
-		for (let i = pix.length - 1; i >= 0; i -= 4) {
-			if (pix[i] != 0) {
-				let x = Math.floor(i / 4) % 100;
-				let y = Math.floor(Math.floor(i / 100) / 4);
-			//	console.log(x, y)
-				if ((x && x % 2 === 0) && (y && y % 2 === 0)) {
-					dotNodes.push({x: x, y: y});
-				}
-			}
-		}
-		//console.log(dotNodes)
-		Bus.$emit('dots', dotNodes)
-	}
+  name: 'letter',
+  data () {
+    return {
+      ctx: null
+    }
+  },
+  props: ['letter'],
+  mounted () {
+    this.ctx = this.$refs.canvas.getContext('2d');
+    this.createLetter();
+  },
+  watch: {
+    letter () {
+      this.createLetter();
+    }
+  },
+  methods: {
+    createLetter () {
+      let ctx = this.ctx;
+      ctx.textAlign = 'center'
+      ctx.font = '100px Georgia'
+      ctx.fillStyle = 'blue'
+      ctx.fillText(this.letter, 50, 80)
+      let pix = ctx.getImageData(0, 0, 100, 100).data
+      let dotNodes = []
+      for (let i = pix.length - 1; i >= 0; i -= 4) {
+        if (pix[i] !== 0) {
+          let x = Math.floor(i / 4) % 100
+          let y = Math.floor(Math.floor(i / 100) / 4)
+          if ((x && x % 2 === 0) && (y && y % 2 === 0)) {
+            dotNodes.push({x: x, y: y})
+          }
+          // dotNodes.push({x: x, y: y})
+        }
+      }
+      console.log(dotNodes.length)
+      setTimeout(() => {
+        Bus.$emit('dots', dotNodes)
+        ctx.clearRect(0, 0, 100, 100);
+      }, 1000)
+    }
+  }
 }
 </script>
 
 <style scoped>
-	canvas {
-		position: absolute;
-		left: 50%; 
-		top: 50%;
-		margin-left: -50px;
-		margin-top: -50px;
-		z-index: 3;
-	}
+  canvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+    z-index: 3;
+  }
 </style>
