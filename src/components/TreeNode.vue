@@ -6,7 +6,7 @@
       <span class="btn" @click="all">全选</span>
     </div>
     <div>
-      <input type="text" v-model="filter" class="tree-filter" placeholder="请选择摄像头">
+      <input type="text" @input="filterChange" :value="filter" class="tree-filter" placeholder="请选择摄像头">
     </div>
     <template v-for="node in nodes">
       <tree-node-item @onChange="onChange" :key="node.id" :item="node"></tree-node-item>
@@ -16,28 +16,18 @@
 
 <script>
 import TreeNodeItem from './TreeNodeItem.vue'
-import Data from '../common/data'
 import TreeNode from '../common/TreeNode'
-import Bus from '../common/Bus'
+
 export default {
   name: 'treeNode',
   components: { TreeNodeItem },
-  data () {
-    return {
-      nodes: [],
-      filter: ''
-    }
-  },
-  created () {
-    this.nodes = TreeNode.createTree(Data, null);
+  props: {
+    nodes: { type: Array, required: true },
+    filter: { type: String }
   },
   watch: {
     filter () {
-      if (this.filter) {
-        this.nodesVisible(this.filter)
-      } else {
-        this.nodesResetVisible()
-      }
+      this.nodesVisible(this.filter);
     }
   },
   methods: {
@@ -47,13 +37,8 @@ export default {
     },
     nodesVisible (filter) {
       this.nodes.map(node => {
-        TreeNode.visibleHandle(node, filter);
-      })
-      this.result();
-    },
-    nodesResetVisible () {
-      this.nodes.map(node => {
-        TreeNode.resetVisible(node);
+        filter ? TreeNode.visibleHandle(node, filter)
+          : TreeNode.resetVisible(node);
       })
       this.result();
     },
@@ -68,7 +53,10 @@ export default {
     result () {
       let result = [];
       TreeNode.getLeafs(this.nodes, result);
-      Bus.$emit('selector', result)
+      this.$emit('selecter', result)
+    },
+    filterChange (e) {
+      this.$emit('filterChange', e.target.value);
     }
   }
 }

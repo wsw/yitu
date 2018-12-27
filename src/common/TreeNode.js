@@ -24,7 +24,7 @@ export default class TreeNode {
     this.state = state
     this.feedback()
     this.children.map(child => {
-      child.changeState(state);
+      child.visible && child.changeState(state);
     })
   }
   // 下级节点向上处理父级状态
@@ -35,11 +35,17 @@ export default class TreeNode {
         this.parent.state = false;
       } else {
         let flag = 0;
-        this.parent.children.map(child => child.state && flag++)
+        let visibleNumber = 0;
+        this.parent.children.map(child => {
+          if (child.visible) {
+            child.state && flag++;
+            visibleNumber++;
+          }
+        })
         if (flag === 0) {
           this.parent.state = false
           this.parent.indeterminate = false
-        } else if (flag === this.parent.children.length) {
+        } else if (flag === visibleNumber) {
           this.parent.state = true
           this.parent.indeterminate = false
         } else {

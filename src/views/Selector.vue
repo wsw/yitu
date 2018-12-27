@@ -5,38 +5,50 @@
            class="button"
            v-model="select">
     <div class="selector" v-if="selectorShow" @click.stop>
-      <tree-node></tree-node>
+      <tree-node
+        :nodes="nodes"
+        :filter="filter"
+        @selecter="selecter"
+        @filterChange="filterChange"></tree-node>
     </div>
   </div>
 </template>
 
 <script>
 import TreeNode from '../components/TreeNode';
-import Bus from '../common/Bus'
+import TreeNodeClass from '../common/TreeNode'
+import Data from '../common/data'
+
 export default {
   name: 'selector',
   components: { TreeNode },
   data () {
     return {
       select: '选择摄像头',
-      selectorShow: false
+      selectorShow: false,
+      nodes: [],
+      filter: ''
     }
   },
   created () {
-    Bus.$on('selector', (nodes) => {
-      if (nodes.length > 0) {
-        this.select = `已选择${nodes.length}个摄像头`
-      } else {
-        this.select = '选择摄像头'
-      }
-    })
     document.addEventListener('click', (e) => {
       this.selectorShow = false
     })
+    this.nodes = TreeNodeClass.createTree(Data, null);
   },
   methods: {
     show () {
       this.selectorShow = !this.selectorShow;
+    },
+    filterChange (filter) {
+      this.filter = filter
+    },
+    selecter (resultNodes) {
+      if (resultNodes.length > 0) {
+        this.select = `已选择${resultNodes.length}个摄像头`
+      } else {
+        this.select = '选择摄像头'
+      }
     }
   }
 }
