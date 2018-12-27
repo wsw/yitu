@@ -41,11 +41,10 @@ export default {
           // dotNodes.push({x: x, y: y})
         }
       }
-      console.log(dotNodes.length)
       setTimeout(() => {
         Bus.$emit('dots', dotNodes)
         ctx.clearRect(0, 0, 100, 100);
-      }, 1000)
+      }, 500)
     }
   }
 }

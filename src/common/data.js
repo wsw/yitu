@@ -12,4 +12,17 @@ export default [{
     'id': '4@DEFAULT',
     'name': '2-003'
   }]
+}, {
+  'id': '15305130802',
+  'name': '分组三',
+  'children': [{
+    'id': '7@DEFAULT',
+    'name': '分组4',
+    'children': [
+      {'id': '10@DEFAULT', 'name': '2-002'}, {
+        'id': '11@DEFAULT',
+        'name': '2-003'
+      }
+    ]
+  }]
 }]

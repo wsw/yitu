@@ -59,7 +59,7 @@ export default {
       }
       if (this.repeat < this.count) {
         requestAnimationFrame(this.reCal)
-        if (this.repeat + 15 > this.count && !this.next) {
+        if (this.repeat + 5 > this.count && !this.next) {
           this.next = true
           this.wordIndex = ++this.wordIndex % this.words.length
           this.letter = this.words[this.wordIndex]
